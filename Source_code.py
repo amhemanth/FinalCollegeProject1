@@ -4,7 +4,6 @@ import face_recognition
 import os
 from datetime import datetime
 
-
 # Helper functions
 def loadFiles():
     # load data from the path
@@ -25,7 +24,7 @@ def loadFiles():
 def encodings(images):
     encoding_list = []
     for img in images:
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # convert brg to rgb
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # convert bgr to rgb
         encode = face_recognition.face_encodings(img)[0]  # encode images
         encoding_list.append(encode)
     print("Encoding completed!!")
@@ -52,9 +51,12 @@ def capture_frame(class_names, known_encoding_list):
 
     while True:
         success, frame = cap.read()  # read a frame
+        # show original frame
+        # cv2.imshow("Original", frame)
         # img_frame = cv2.resize(frame, (0, 0), None, 0.25, 0.25)  # preprocess the frame
         img_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert bgr to rgb
-
+        # show the converted frame
+        #cv2.imshow("BGR2RGB", img_frame)
         faces_cur_Location = face_recognition.face_locations(img_frame)  # find locations of faces in frame
 
         # encode for each and every face in the frame
@@ -76,12 +78,16 @@ def capture_frame(class_names, known_encoding_list):
             y1, x2, y2, x1 = faceLoc
             # y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
 
+            # Display rectangle around face
+            # frame2 = frame
+            # cv2.rectangle(frame2, (x1, y1), (x2, y2), (51, 204, 51), 2)
+            # cv2.imshow("face", frame2)
             # create a rectangle frame around the face
             cv2.rectangle(frame, (x1, y1), (x2, y2), (51, 204, 51), 2)
             cv2.rectangle(frame, (x1, y2 - 35), (x2, y2), (51, 204, 51), 2, cv2.FILLED)
 
             # insert text onto the image
-            cv2.putText(frame, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (240, 240, 240), 2)
+            cv2.putText(frame, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 
         # display image
         cv2.imshow('web cam', frame)
