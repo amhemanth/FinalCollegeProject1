@@ -3,7 +3,7 @@ import numpy as np
 import face_recognition
 import os
 from datetime import datetime
-
+from MarkAttendance import Attendance
 # Helper functions
 def loadFiles():
     # load data from the path
@@ -48,15 +48,15 @@ def mark_attendance(name):
 # process Attendance
 def capture_frame(class_names, known_encoding_list):
     cap = cv2.VideoCapture(0)  # capture video
-
-    while True:
+    i = 0
+    while i<10:
         success, frame = cap.read()  # read a frame
         # show original frame
         # cv2.imshow("Original", frame)
         # img_frame = cv2.resize(frame, (0, 0), None, 0.25, 0.25)  # preprocess the frame
         img_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # convert bgr to rgb
         # show the converted frame
-        #cv2.imshow("BGR2RGB", img_frame)
+        # cv2.imshow("BGR2RGB", img_frame)
         faces_cur_Location = face_recognition.face_locations(img_frame)  # find locations of faces in frame
 
         # encode for each and every face in the frame
@@ -73,6 +73,7 @@ def capture_frame(class_names, known_encoding_list):
             if faceDis[matchIndex] < 0.60:
                 name = class_names[matchIndex].upper()
                 mark_attendance(name)
+                Attendance(name)
             else:
                 name = 'Unknown'
             y1, x2, y2, x1 = faceLoc
@@ -92,6 +93,7 @@ def capture_frame(class_names, known_encoding_list):
         # display image
         cv2.imshow('web cam', frame)
         cv2.waitKey(1)
+        i+=1
 
 
 # build Model

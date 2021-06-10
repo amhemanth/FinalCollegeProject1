@@ -4,4 +4,5 @@ numpy
 Keras
 wheel
 cmake
-dlib 
+dlib
+pymongo==3.11.2 
